@@ -31,3 +31,7 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+
+# Editor and personal notes
+/.vscode/
+/learning/
