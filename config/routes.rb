@@ -7,4 +7,14 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  # get "organizations" to: "organization#index"
+  # get "organizations/:id" to: "organization#show"
+
+  # resources: organizations, only: [:index, :show, :create, :update, :destroy]
+
+  namespace :api do
+    namespace :v1 do
+      resources :organizations, only: :index
+    end
+  end
 end
