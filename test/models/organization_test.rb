@@ -17,4 +17,21 @@ class OrganizationTest < ActiveSupport::TestCase
     assert_not org.valid?
     assert_includes org.errors[:name], "has already been taken"
   end
+
+  test "has many users and patients" do
+    assert_equal 2, organizations(:sunrise).users.count
+    assert_equal 2, organizations(:sunrise).patients.count
+  end
+
+  test "cannot be destroyed while it has patients" do
+    assert_raises(ActiveRecord::DeleteRestrictionError) do
+      organizations(:sunrise).destroy!
+    end
+  end
+
+  test "can be destroyed when it has no users or patients" do
+    assert_difference("Organization.count", -1) do
+      organizations(:valley).destroy!
+    end
+  end
 end

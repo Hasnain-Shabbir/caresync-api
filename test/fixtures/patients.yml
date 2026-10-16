@@ -1,0 +1,11 @@
+alice:
+  organization: sunrise
+  first_name: Alice
+  last_name: Adams
+  date_of_birth: 1990-04-12
+
+bob:
+  organization: sunrise
+  first_name: Bob
+  last_name: Brown
+  date_of_birth: 1985-09-30

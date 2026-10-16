@@ -1,0 +1,15 @@
+admin_sunrise:
+  organization: sunrise
+  email: admin@sunrise.test
+  password_digest: "placeholder"
+  first_name: Ada
+  last_name: Admin
+  role: admin
+
+nurse_sunrise:
+  organization: sunrise
+  email: nurse@sunrise.test
+  password_digest: "placeholder"
+  first_name: Nina
+  last_name: Nurse
+  role: nurse

@@ -87,7 +87,7 @@ class Api::V1::OrganizationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "destroy removes the organization and returns 204" do
-    organization = organizations(:sunrise)
+    organization = organizations(:valley)
 
     assert_difference("Organization.count", -1) do
       delete api_v1_organization_url(organization), as: :json
@@ -103,5 +103,14 @@ class Api::V1::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :not_found
+  end
+
+  test "destroy returns 409 when the organization still has users or patients" do
+    assert_no_difference("Organization.count") do
+      delete api_v1_organization_url(organizations(:sunrise)), as: :json
+    end
+
+    assert_response :conflict
+    assert_equal "conflict", response.parsed_body["error"]["code"]
   end
 end
