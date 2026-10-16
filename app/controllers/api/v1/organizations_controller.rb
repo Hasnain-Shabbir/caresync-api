@@ -1,14 +1,15 @@
 module Api
   module V1
     class OrganizationsController < ApplicationController
+      before_action :set_organization, only: [:show, :update, :destroy]
+
       def index
         organizations = Organization.order(:name)
         render json: organizations
       end
 
       def show
-        org = Organization.find(params[:id])
-        render json: org
+        render json: @organization
       end
 
       def create
@@ -17,15 +18,22 @@ module Api
       end
 
       def update
-        render json: "Update route is working"
+        @organization.update!(organization_params)
+        render json: @organization
       end
 
       def destroy
-        render json: "Destroy route is working"
+        @organization.destroy!
+        head :no_content
       end
 
-      # Define params body
+
       private
+      def set_organization
+        @organization = Organization.find(params[:id])
+      end
+      
+      # Define params body
       def organization_params
         params.expect(organization: [:name])
       end

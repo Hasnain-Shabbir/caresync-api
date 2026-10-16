@@ -58,4 +58,50 @@ class Api::V1::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     assert_response :bad_request
     assert_equal "bad_request", response.parsed_body["error"]["code"]
   end
+
+  test "update changes the organization name and returns 200" do
+    organization = organizations(:sunrise)
+
+    patch api_v1_organization_url(organization), params: { organization: { name: "Renamed Clinic" } }, as: :json
+
+    assert_response :success
+    assert_equal "Renamed Clinic", response.parsed_body["name"]
+    assert_equal "Renamed Clinic", organization.reload.name
+  end
+
+  test "update with a duplicate name returns 422 and does not change the name" do
+    organization = organizations(:sunrise)
+
+    patch api_v1_organization_url(organization), params: { organization: { name: "Valley Health" } }, as: :json
+
+    assert_response :unprocessable_content
+    assert_equal "validation_failed", response.parsed_body["error"]["code"]
+    assert_equal "Sunrise Clinic", organization.reload.name
+  end
+
+  test "update returns 404 when the organization does not exist" do
+    patch api_v1_organization_url(id: 0), params: { organization: { name: "Nope" } }, as: :json
+
+    assert_response :not_found
+    assert_equal "not_found", response.parsed_body["error"]["code"]
+  end
+
+  test "destroy removes the organization and returns 204" do
+    organization = organizations(:sunrise)
+
+    assert_difference("Organization.count", -1) do
+      delete api_v1_organization_url(organization), as: :json
+    end
+
+    assert_response :no_content
+    assert_empty response.body
+  end
+
+  test "destroy returns 404 when the organization does not exist" do
+    assert_no_difference("Organization.count") do
+      delete api_v1_organization_url(id: 0), as: :json
+    end
+
+    assert_response :not_found
+  end
 end
