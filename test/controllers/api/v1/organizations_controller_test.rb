@@ -7,7 +7,7 @@ class Api::V1::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     body = response.parsed_body
     assert_equal Organization.count, body.size
-    assert_equal ["Sunrise Clinic", "Valley Health"], body.map { |o| o["name"] }
+    assert_equal [ "Sunrise Clinic", "Valley Health" ], body.map { |o| o["name"] }
   end
 
   test "show returns the organization as JSON" do

@@ -1,7 +1,7 @@
 module Api
   module V1
     class OrganizationsController < ApplicationController
-      before_action :set_organization, only: [:show, :update, :destroy]
+      before_action :set_organization, only: [ :show, :update, :destroy ]
 
       def index
         organizations = Organization.order(:name)
@@ -32,12 +32,11 @@ module Api
       def set_organization
         @organization = Organization.find(params[:id])
       end
-      
+
       # Define params body
       def organization_params
-        params.expect(organization: [:name])
+        params.expect(organization: [ :name ])
       end
-
     end
   end
 end

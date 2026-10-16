@@ -17,7 +17,7 @@ class ApplicationController < ActionController::API
   def render_unprocessable(exception)
     render json: {
       error: {
-        code: 'validation_failed',
+        code: "validation_failed",
         message: "Validation failed",
         details: exception.record.errors.to_hash
       }
@@ -28,10 +28,9 @@ class ApplicationController < ActionController::API
   def render_bad_request(exception)
     render json: {
       error: {
-        code: 'bad_request',
+        code: "bad_request",
         message: "Missing parameter: #{exception.param}"
       }
     }, status: :bad_request
   end
-
 end
