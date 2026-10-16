@@ -7,7 +7,8 @@ module Api
       end
 
       def show
-        render json: "This is working"
+        org = Organization.find(params[:id])
+        render json: org
       end
 
       def create
