@@ -29,4 +29,33 @@ class Api::V1::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "not_found", error["code"]
     assert_equal "Organization not found", error["message"]
   end
+
+  test "create adds an organization and returns 201" do
+    assert_difference("Organization.count", 1) do
+      post api_v1_organizations_url, params: { organization: { name: "New Clinic" } }, as: :json
+    end
+
+    assert_response :created
+    assert_equal "New Clinic", response.parsed_body["name"]
+  end
+
+  test "create with a duplicate name returns 422" do
+    assert_no_difference("Organization.count") do
+      post api_v1_organizations_url, params: { organization: { name: "Sunrise Clinic" } }, as: :json
+    end
+
+    assert_response :unprocessable_content
+    error = response.parsed_body["error"]
+    assert_equal "validation_failed", error["code"]
+    assert error["details"].key?("name")
+  end
+
+  test "create without the organization key returns 400" do
+    assert_no_difference("Organization.count") do
+      post api_v1_organizations_url, params: {}, as: :json
+    end
+
+    assert_response :bad_request
+    assert_equal "bad_request", response.parsed_body["error"]["code"]
+  end
 end

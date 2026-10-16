@@ -12,7 +12,8 @@ module Api
       end
 
       def create
-        render json: "Create route is working"
+        organization = Organization.create!(organization_params)
+        render json: organization, status: :created
       end
 
       def update
@@ -21,6 +22,12 @@ module Api
 
       def destroy
         render json: "Destroy route is working"
+      end
+
+      # Define params body
+      private
+      def organization_params
+        params.expect(organization: [:name])
       end
 
     end
