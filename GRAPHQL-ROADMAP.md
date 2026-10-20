@@ -4,6 +4,18 @@ Supersedes the Phase 1 to 6 order in [ROADMAP.md](ROADMAP.md). The REST `Organiz
 
 How we work: I write boilerplate and a short doc per step, you write the core logic, I review the diff and ask the self-check questions, you add takeaways to [NOTES.md](NOTES.md). Stack: Rails 8.1 API, Ruby 3.4.2, PostgreSQL, Minitest, graphql-ruby.
 
+## Time-boxed plan (set 2026-10-20): finish the current API in 2 to 3 days
+
+The user types all code. For each step Claude writes a guide in `learning/` first (why, what to type, tests, self-check). Steps 1 to 3 are done.
+
+| Day | Build | Guide |
+|---|---|---|
+| 1 | `Patient` queries and mutations, N+1 fix with `GraphQL::Dataloader` (step 4) | guide 04 |
+| 2 | Authentication: `bcrypt`, hashed API token, `login` / `logout`, `context[:current_user]`, then tenancy with `Current.organization` (steps 5 and 6) | guides 05, 06 |
+| 3 | Roles and policies (step 7), password-reset mailer plus job, hardening basics: introspection off in production, query limits (step 8 subset), README | guides 07, 08 |
+
+Cut for now (add later if time allows): MFA, field encryption, audit log, rack-attack, Kamal deploy, subscriptions.
+
 ## Steps
 
 | # | Step | Main topics | Exit criterion |
