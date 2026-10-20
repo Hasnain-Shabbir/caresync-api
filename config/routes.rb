@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   post "/graphql", to: "graphql#execute"
 
+  get "/sandbox", to: "sandbox#show" if Rails.env.development?
+
   namespace :api do
     namespace :v1 do
       resources :organizations, only: [ :index, :show, :create, :update, :destroy ]
