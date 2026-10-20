@@ -8,12 +8,20 @@ module Types
       Organization.order(:name)
     end
 
-    field :organization, Types::OrganizationType, null: false do
+    field :organization, Types::OrganizationType, null: true do
       argument :id, ID, required: true
     end
 
     def organization(id:)
       Organization.find(id)
+    end
+
+    field :patient, Types::PatientType, null: true do
+      argument :id, ID, required: true
+    end
+
+    def patient(id:)
+      Patient.find(id)
     end
   end
 end
