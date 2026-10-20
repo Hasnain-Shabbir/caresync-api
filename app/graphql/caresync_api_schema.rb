@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class CaresyncApiSchema < GraphQL::Schema
-  rescue_from(ActiveRecord::RecordNotFound) do |_err, _obj, args, _ctx, field|
+  rescue_from(ActiveRecord::RecordNotFound) do |err, _obj, _args, _ctx, _field|
     raise GraphQL::ExecutionError.new(
-      "#{field.type.unwrap.graphql_name} not found",
+      "#{err.model || 'Record'} not found",
       extensions: { code: "NOT_FOUND" }
     )
   end
