@@ -10,6 +10,24 @@ class PatientMutationsTest < ActiveSupport::TestCase
     }
   GQL
 
+  UPDATE = <<~GQL
+    mutation($input: UpdatePatientInput!) {
+      updatePatient(input: $input) {
+        patient { id firstName lastName dateOfBirth }
+        errors { message path code }
+      }
+    }
+  GQL
+
+  DELETE = <<~GQL
+    mutation($input: DeletePatientInput!) {
+      deletePatient(input: $input) {
+        deletedId
+        errors { message path code }
+      }
+    }
+  GQL
+
   def execute(query, input)
     CaresyncApiSchema.execute(query, variables: { input: input }, context: {}).to_h
   end
@@ -114,5 +132,77 @@ class PatientMutationsTest < ActiveSupport::TestCase
 
     assert_nil result["data"]
     assert_match(/firstName/, result["errors"].first["message"])
+  end
+
+  # updatePatient
+
+  test "update changes only the fields that were sent" do
+    patient = patients(:alice)
+    result = execute(UPDATE, { id: patient.id.to_s, lastName: "Adamson" })
+
+    payload = result.dig("data", "updatePatient")
+    assert_equal [], payload["errors"]
+    assert_equal "Adamson", payload.dig("patient", "lastName")
+    patient.reload
+    assert_equal "Adamson", patient.last_name
+    assert_equal "Alice", patient.first_name
+    assert_equal Date.new(1990, 4, 12), patient.date_of_birth
+  end
+
+  test "update returns a validation error for a blank name and leaves the record unchanged" do
+    patient = patients(:alice)
+    result = execute(UPDATE, { id: patient.id.to_s, firstName: "" })
+
+    payload = result.dig("data", "updatePatient")
+    assert_nil payload["patient"]
+    error = payload["errors"].first
+    assert_equal "VALIDATION_FAILED", error["code"]
+    assert_equal [ "input", "firstName" ], error["path"]
+    assert_equal "Alice", patient.reload.first_name
+  end
+
+  test "update with an unknown id returns a top-level NOT_FOUND error" do
+    result = execute(UPDATE, { id: "0", firstName: "X" })
+
+    assert_not_nil result["data"]
+    assert_nil result.dig("data", "updatePatient")
+    error = result["errors"].first
+    assert_equal "Patient not found", error["message"]
+    assert_equal "NOT_FOUND", error.dig("extensions", "code")
+  end
+
+  test "update does not accept an organization, so a patient cannot move between tenants" do
+    patient = patients(:alice)
+    result = execute(UPDATE, { id: patient.id.to_s, organizationId: organizations(:valley).id.to_s })
+
+    assert_nil result["data"]
+    assert result["errors"].present?
+    assert_equal organizations(:sunrise), patient.reload.organization
+  end
+
+  # deletePatient
+
+  test "delete removes the patient" do
+    patient = patients(:bob)
+    result = nil
+    assert_difference("Patient.count", -1) do
+      result = execute(DELETE, { id: patient.id.to_s })
+    end
+
+    payload = result.dig("data", "deletePatient")
+    assert_equal [], payload["errors"]
+    assert_equal patient.id.to_s, payload["deletedId"]
+    assert_not Patient.exists?(patient.id)
+  end
+
+  test "delete with an unknown id returns a top-level NOT_FOUND error" do
+    result = nil
+    assert_no_difference("Patient.count") do
+      result = execute(DELETE, { id: "0" })
+    end
+
+    assert_not_nil result["data"]
+    assert_nil result.dig("data", "deletePatient")
+    assert_equal "NOT_FOUND", result["errors"].first.dig("extensions", "code")
   end
 end
