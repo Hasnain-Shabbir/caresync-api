@@ -12,6 +12,7 @@ module Mutations
     field :errors, [ Types::UserErrorType ], null: false
 
     def resolve(**attrs)
+      authorize!(Patient, :create?)
       patient = current_organization.patients.new(attrs)
 
       if patient.save

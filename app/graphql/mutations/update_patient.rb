@@ -13,6 +13,7 @@ module Mutations
 
     def resolve(id:, **attrs)
       patient = current_organization.patients.find(id)
+      authorize!(patient, :update?)
 
       if patient.update(attrs)
         { patient: patient, errors: [] }

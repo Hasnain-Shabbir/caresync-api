@@ -10,6 +10,7 @@ module Mutations
 
     def resolve(id:)
       patient = current_organization.patients.find(id)
+      authorize!(patient, :destroy?)
       patient.destroy!
 
       { deleted_id: id, errors: [] }

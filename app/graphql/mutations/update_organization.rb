@@ -10,6 +10,7 @@ module Mutations
 
     def resolve(id:, name:)
       organization = Organization.where(id: current_organization.id).find(id)
+      authorize!(organization, :update?)
 
       if organization.update(name: name)
         { organization: organization, errors: [] }

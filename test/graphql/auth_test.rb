@@ -43,9 +43,9 @@ class AuthTest < ActiveSupport::TestCase
   end
 
   test "a mutation without a user is rejected and creates nothing" do
-    mutation = 'mutation { createOrganization(input: { name: "Sneaky Clinic" }) { organization { id } } }'
+    mutation = 'mutation { createPatient(input: { firstName: "Sneaky", lastName: "Visitor", dateOfBirth: "2000-01-01" }) { patient { id } } }'
 
-    assert_no_difference("Organization.count") do
+    assert_no_difference("Patient.count") do
       assert_unauthenticated execute(mutation)
     end
   end

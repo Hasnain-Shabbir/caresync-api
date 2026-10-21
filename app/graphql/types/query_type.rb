@@ -25,12 +25,14 @@ module Types
     field :patients, [ Types::PatientType ], null: false
 
     def patients
+      authorize!(Patient, :index?)
       current_organization.patients.order(:last_name, :first_name)
     end
 
     def patient(id:)
-      current_user!
-      current_organization.patients.find(id)
+      record = current_organization.patients.find(id)
+      authorize!(record, :show?)
+      record
     end
   end
 end
