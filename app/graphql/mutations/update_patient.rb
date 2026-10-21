@@ -12,7 +12,7 @@ module Mutations
     field :errors, [ Types::UserErrorType ], null: false
 
     def resolve(id:, **attrs)
-      patient = Patient.find(id)
+      patient = current_organization.patients.find(id)
 
       if patient.update(attrs)
         { patient: patient, errors: [] }

@@ -30,8 +30,10 @@ class OrganizationTest < ActiveSupport::TestCase
   end
 
   test "can be destroyed when it has no users or patients" do
+    empty = Organization.create!(name: "Empty Clinic")
+
     assert_difference("Organization.count", -1) do
-      organizations(:valley).destroy!
+      empty.destroy!
     end
   end
 end

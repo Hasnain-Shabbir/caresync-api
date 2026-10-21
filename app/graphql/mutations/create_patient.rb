@@ -2,7 +2,7 @@ module Mutations
   class CreatePatient < BaseMutation
     null true
 
-    argument :organization_id, ID, required: true
+    # argument :organization_id, ID, required: true
     argument :first_name, String, required: true
     argument :last_name, String, required: true
     argument :date_of_birth, GraphQL::Types::ISO8601Date, required: true
@@ -12,7 +12,7 @@ module Mutations
     field :errors, [ Types::UserErrorType ], null: false
 
     def resolve(**attrs)
-      patient = Patient.new(attrs)
+      patient = current_organization.patients.new(attrs)
 
       if patient.save
         { patient: patient, errors: [] }

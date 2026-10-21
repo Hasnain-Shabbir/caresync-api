@@ -9,3 +9,9 @@ bob:
   first_name: Bob
   last_name: Brown
   date_of_birth: 1985-09-30
+
+carol:
+  organization: valley
+  first_name: Carol
+  last_name: Clark
+  date_of_birth: 1978-01-22

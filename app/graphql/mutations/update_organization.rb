@@ -9,7 +9,7 @@ module Mutations
     field :errors, [ Types::UserErrorType ], null: false
 
     def resolve(id:, name:)
-      organization = Organization.find(id)
+      organization = Organization.where(id: current_organization.id).find(id)
 
       if organization.update(name: name)
         { organization: organization, errors: [] }

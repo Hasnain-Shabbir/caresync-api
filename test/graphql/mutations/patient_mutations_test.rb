@@ -34,7 +34,6 @@ class PatientMutationsTest < ActiveSupport::TestCase
 
   def valid_create_input(overrides = {})
     {
-      organizationId: organizations(:valley).id.to_s,
       firstName: "Ann",
       lastName: "Lee",
       dateOfBirth: "1992-06-15"
@@ -56,11 +55,11 @@ class PatientMutationsTest < ActiveSupport::TestCase
     assert_equal "1992-06-15", payload.dig("patient", "dateOfBirth")
   end
 
-  test "create saves the patient under the given organization" do
+  test "create saves the patient under the logged-in user's organization" do
     result = execute(CREATE, valid_create_input)
 
     patient = Patient.find(result.dig("data", "createPatient", "patient", "id"))
-    assert_equal organizations(:valley), patient.organization
+    assert_equal organizations(:sunrise), patient.organization
     assert_equal Date.new(1992, 6, 15), patient.date_of_birth
   end
 
@@ -98,19 +97,6 @@ class PatientMutationsTest < ActiveSupport::TestCase
     paths = result.dig("data", "createPatient", "errors").map { |e| e["path"] }
     assert_includes paths, [ "input", "firstName" ]
     assert_includes paths, [ "input", "lastName" ]
-  end
-
-  test "create returns a validation error for an organization that does not exist" do
-    result = nil
-    assert_no_difference("Patient.count") do
-      result = execute(CREATE, valid_create_input(organizationId: "0"))
-    end
-
-    payload = result.dig("data", "createPatient")
-    assert_nil payload["patient"]
-    error = payload["errors"].first
-    assert_equal "VALIDATION_FAILED", error["code"]
-    assert_match(/must exist/, error["message"])
   end
 
   test "create rejects an invalid date before running the mutation" do

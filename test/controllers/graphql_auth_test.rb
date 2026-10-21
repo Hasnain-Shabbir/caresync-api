@@ -50,7 +50,7 @@ class GraphqlAuthTest < ActionDispatch::IntegrationTest
     body = gql(ORGANIZATIONS, token: token)
 
     assert_nil body["errors"]
-    assert_equal [ "Sunrise Clinic", "Valley Health" ], body.dig("data", "organizations").map { |o| o["name"] }
+    assert_equal [ "Sunrise Clinic" ], body.dig("data", "organizations").map { |o| o["name"] }
   end
 
   test "logout makes the same token stop working at once" do

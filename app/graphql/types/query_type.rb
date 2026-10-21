@@ -6,7 +6,7 @@ module Types
 
     def organizations
       current_user!
-      Organization.order(:name)
+      Organization.where(id: current_organization.id).order(:name)
     end
 
     field :organization, Types::OrganizationType, null: true do
@@ -15,16 +15,22 @@ module Types
 
     def organization(id:)
       current_user!
-      Organization.find(id)
+      Organization.where(id: current_organization.id).find(id)
     end
 
     field :patient, Types::PatientType, null: true do
       argument :id, ID, required: true
     end
 
+    field :patients, [ Types::PatientType ], null: false
+
+    def patients
+      current_organization.patients.order(:last_name, :first_name)
+    end
+
     def patient(id:)
       current_user!
-      Patient.find(id)
+      current_organization.patients.find(id)
     end
   end
 end

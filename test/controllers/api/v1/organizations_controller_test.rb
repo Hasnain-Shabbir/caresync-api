@@ -87,7 +87,7 @@ class Api::V1::OrganizationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "destroy removes the organization and returns 204" do
-    organization = organizations(:valley)
+    organization = Organization.create!(name: "Empty Clinic")
 
     assert_difference("Organization.count", -1) do
       delete api_v1_organization_url(organization), as: :json

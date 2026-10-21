@@ -74,23 +74,23 @@ class OrganizationMutationsTest < ActiveSupport::TestCase
   # updateOrganization
 
   test "update changes the name" do
-    org = organizations(:valley)
-    result = execute(UPDATE, { id: org.id.to_s, name: "Valley Health Group" })
+    org = organizations(:sunrise)
+    result = execute(UPDATE, { id: org.id.to_s, name: "Sunrise Clinic Group" })
 
     payload = result.dig("data", "updateOrganization")
     assert_equal [], payload["errors"]
-    assert_equal "Valley Health Group", payload.dig("organization", "name")
-    assert_equal "Valley Health Group", org.reload.name
+    assert_equal "Sunrise Clinic Group", payload.dig("organization", "name")
+    assert_equal "Sunrise Clinic Group", org.reload.name
   end
 
   test "update returns a validation error for a blank name and leaves the record unchanged" do
-    org = organizations(:valley)
+    org = organizations(:sunrise)
     result = execute(UPDATE, { id: org.id.to_s, name: "" })
 
     payload = result.dig("data", "updateOrganization")
     assert_nil payload["organization"]
     assert_equal "VALIDATION_FAILED", payload["errors"].first["code"]
-    assert_equal "Valley Health", org.reload.name
+    assert_equal "Sunrise Clinic", org.reload.name
   end
 
   test "update with an unknown id returns a top-level NOT_FOUND error" do
@@ -105,7 +105,7 @@ class OrganizationMutationsTest < ActiveSupport::TestCase
   # deleteOrganization
 
   test "delete removes an organization that has no users or patients" do
-    org = organizations(:valley)
+    org = Organization.create!(name: "Empty Clinic")
     result = nil
     assert_difference("Organization.count", -1) do
       result = execute(DELETE, { id: org.id.to_s })

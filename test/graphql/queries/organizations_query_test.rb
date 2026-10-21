@@ -5,12 +5,12 @@ class OrganizationsQueryTest < ActiveSupport::TestCase
     CaresyncApiSchema.execute(query, variables: variables, context: graphql_context).to_h
   end
 
-  test "organizations returns all organizations ordered by name" do
+  test "organizations returns only the logged-in user's organization" do
     result = execute("{ organizations { id name } }")
 
     assert_nil result["errors"]
     names = result.dig("data", "organizations").map { |o| o["name"] }
-    assert_equal [ "Sunrise Clinic", "Valley Health" ], names
+    assert_equal [ "Sunrise Clinic" ], names
   end
 
   test "organization returns one by id" do

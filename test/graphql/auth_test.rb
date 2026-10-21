@@ -62,7 +62,7 @@ class AuthTest < ActiveSupport::TestCase
     result = execute("{ organizations { name } }", context: graphql_context)
 
     assert_nil result["errors"]
-    assert_equal [ "Sunrise Clinic", "Valley Health" ], result.dig("data", "organizations").map { |o| o["name"] }
+    assert_equal [ "Sunrise Clinic" ], result.dig("data", "organizations").map { |o| o["name"] }
   end
 
   # login

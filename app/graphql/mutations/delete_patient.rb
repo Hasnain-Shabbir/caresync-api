@@ -9,7 +9,7 @@ module Mutations
     field :errors, [ Types::UserErrorType ], null: false
 
     def resolve(id:)
-      patient = Patient.find(id)
+      patient = current_organization.patients.find(id)
       patient.destroy!
 
       { deleted_id: id, errors: [] }

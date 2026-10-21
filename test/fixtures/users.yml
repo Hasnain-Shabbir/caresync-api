@@ -15,3 +15,11 @@ nurse_sunrise:
   first_name: Nina
   last_name: Nurse
   role: nurse
+
+admin_valley:
+  organization: valley
+  email: admin@valley.test
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+  first_name: Val
+  last_name: Admin
+  role: admin
