@@ -5,7 +5,7 @@ class UserTest < ActiveSupport::TestCase
     User.new({
       organization: organizations(:sunrise),
       email: "new@sunrise.test",
-      password_digest: "placeholder",
+      password: "a-long-password-1",
       first_name: "New",
       last_name: "User"
     }.merge(overrides))

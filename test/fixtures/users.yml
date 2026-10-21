@@ -1,7 +1,9 @@
+# Every fixture user's password is "password".
+# Devise::Encryptor hashes it the same way Devise does (cost comes from config.stretches, low in tests).
 admin_sunrise:
   organization: sunrise
   email: admin@sunrise.test
-  password_digest: "placeholder"
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
   first_name: Ada
   last_name: Admin
   role: admin
@@ -9,7 +11,7 @@ admin_sunrise:
 nurse_sunrise:
   organization: sunrise
   email: nurse@sunrise.test
-  password_digest: "placeholder"
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
   first_name: Nina
   last_name: Nurse
   role: nurse

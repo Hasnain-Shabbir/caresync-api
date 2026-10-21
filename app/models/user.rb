@@ -1,5 +1,10 @@
 class User < ApplicationRecord
+  include Devise::JWT::RevocationStrategies::Allowlist
+
+  devise :database_authenticatable, :validatable, :lockable, :recoverable, :jwt_authenticatable, jwt_revocation_strategy: self
+
   belongs_to :organization
+  has_many :allowlisted_jwts, dependent: :destroy
 
   enum :role, {
     admin: "admin",
@@ -9,9 +14,5 @@ class User < ApplicationRecord
   }, validate: true
 
   normalizes :email, with: ->(email) { email.strip.downcase }
-
-  validates :email, presence: true,
-                    uniqueness: true,
-                    format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :first_name, :last_name, presence: true
 end

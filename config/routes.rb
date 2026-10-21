@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
+  devise_for :users, skip: :all
+
   post "/graphql", to: "graphql#execute"
 
   get "/sandbox", to: "sandbox#show" if Rails.env.development?
