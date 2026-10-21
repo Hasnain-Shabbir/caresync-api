@@ -25,7 +25,8 @@ class TenancyTest < ActiveSupport::TestCase
 
   test "fixtures: the first tenant keeps its own users and patients" do
     assert_equal [ patients(:alice), patients(:bob) ].sort_by(&:id), organizations(:sunrise).patients.sort_by(&:id)
-    assert_equal [ users(:admin_sunrise), users(:nurse_sunrise) ].sort_by(&:id), organizations(:sunrise).users.sort_by(&:id)
+    sunrise_users = %i[admin_sunrise provider_sunrise nurse_sunrise front_desk_sunrise].map { |label| users(label) }
+    assert_equal sunrise_users.sort_by(&:id), organizations(:sunrise).users.sort_by(&:id)
   end
 
   test "fixtures: the valley user can authenticate with the shared password" do

@@ -19,7 +19,7 @@ class OrganizationTest < ActiveSupport::TestCase
   end
 
   test "has many users and patients" do
-    assert_equal 2, organizations(:sunrise).users.count
+    assert_equal 4, organizations(:sunrise).users.count
     assert_equal 2, organizations(:sunrise).patients.count
   end
 
