@@ -11,7 +11,7 @@ The user types all code. For each step Claude writes a guide in `learning/` firs
 | Day | Build | Guide |
 |---|---|---|
 | 1 | `Patient` queries and mutations, N+1 fix with `GraphQL::Dataloader` (step 4) | guide 04 |
-| 2 | Authentication: `bcrypt`, hashed API token, `login` / `logout`, `context[:current_user]`, then tenancy with `Current.organization` (steps 5 and 6) | guides 05, 06 |
+| 2 | Authentication with **Devise + devise-jwt** (decided 2026-10-20, the company uses Devise): `login` / `logout` mutations, lockable, JWT allowlist, `context[:current_user]`, then tenancy with `Current.organization` (steps 5 and 6). The hand-built token version moves to a "later" guide | guides 05, 06 |
 | 3 | Roles and policies (step 7), password-reset mailer plus job, hardening basics: introspection off in production, query limits (step 8 subset), README | guides 07, 08 |
 
 Cut for now (add later if time allows): MFA, field encryption, audit log, rack-attack, Kamal deploy, subscriptions.
