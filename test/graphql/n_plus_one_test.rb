@@ -16,8 +16,10 @@ class NPlusOneTest < ActiveSupport::TestCase
   end
 
   test "listing organizations with their patients uses a constant number of queries" do
+    context = graphql_context # load the user fixture before counting, so its SELECT isn't counted
+
     queries = count_queries do
-      CaresyncApiSchema.execute("{ organizations { name patients { firstName } } }", context: {})
+      CaresyncApiSchema.execute("{ organizations { name patients { firstName } } }", context: context)
     end
 
     # 1 query for the organizations + 1 batched query for all their patients,

@@ -11,8 +11,8 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {
-      # Query context goes here, for example:
-      # current_user: current_user,
+      current_user: current_user,
+      token: bearer_token
     }
     result = CaresyncApiSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
@@ -48,5 +48,14 @@ class GraphqlController < ApplicationController
     logger.error e.backtrace.join("\n")
 
     render json: { errors: [ { message: e.message, backtrace: e.backtrace } ], data: {} }, status: 500
+  end
+
+  def bearer_token
+    header = request.authorization.to_s
+    header.delete_prefix("Bearer ").presence if header.start_with?("Bearer ")
+  end
+
+  def current_user
+    request.env["warden"]&.authenticate(scope: :user)
   end
 end

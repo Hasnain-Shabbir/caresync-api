@@ -5,6 +5,7 @@ module Types
     field :organizations, [ Types::OrganizationType ], null: false
 
     def organizations
+      current_user!
       Organization.order(:name)
     end
 
@@ -13,6 +14,7 @@ module Types
     end
 
     def organization(id:)
+      current_user!
       Organization.find(id)
     end
 
@@ -21,6 +23,7 @@ module Types
     end
 
     def patient(id:)
+      current_user!
       Patient.find(id)
     end
   end

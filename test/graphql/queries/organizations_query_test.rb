@@ -2,7 +2,7 @@ require "test_helper"
 
 class OrganizationsQueryTest < ActiveSupport::TestCase
   def execute(query, variables: {})
-    CaresyncApiSchema.execute(query, variables: variables, context: {}).to_h
+    CaresyncApiSchema.execute(query, variables: variables, context: graphql_context).to_h
   end
 
   test "organizations returns all organizations ordered by name" do

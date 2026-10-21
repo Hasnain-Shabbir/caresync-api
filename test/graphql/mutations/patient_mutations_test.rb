@@ -29,7 +29,7 @@ class PatientMutationsTest < ActiveSupport::TestCase
   GQL
 
   def execute(query, input)
-    CaresyncApiSchema.execute(query, variables: { input: input }, context: {}).to_h
+    CaresyncApiSchema.execute(query, variables: { input: input }, context: graphql_context).to_h
   end
 
   def valid_create_input(overrides = {})

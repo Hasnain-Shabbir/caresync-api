@@ -4,7 +4,7 @@ class PatientQueryTest < ActiveSupport::TestCase
   QUERY = "query($id: ID!) { patient(id: $id) { id firstName lastName dateOfBirth } }".freeze
 
   def execute(id)
-    CaresyncApiSchema.execute(QUERY, variables: { id: id }, context: {}).to_h
+    CaresyncApiSchema.execute(QUERY, variables: { id: id }, context: graphql_context).to_h
   end
 
   test "patient returns one patient by id" do
