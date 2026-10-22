@@ -22,7 +22,7 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :patients, [ Types::PatientType ], null: false
+    field :patients, [ Types::PatientType ], null: false, complexity: Types::BaseField::LIST_COMPLEXITY
 
     def patients
       authorize!(Patient, :index?)

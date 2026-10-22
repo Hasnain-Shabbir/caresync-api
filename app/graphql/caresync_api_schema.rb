@@ -24,8 +24,10 @@ class CaresyncApiSchema < GraphQL::Schema
   end
 
   # Limit the depth and size of incoming queries:
-  max_depth(15)
+  max_depth(8)
+  max_complexity(200)
   max_query_string_tokens(5000)
+  disable_introspection_entry_points if Rails.env.production?
 
   # Stop validating when it encounters this many errors:
   validate_max_errors(100)
