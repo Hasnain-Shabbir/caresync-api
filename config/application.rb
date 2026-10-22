@@ -39,5 +39,6 @@ module CaresyncApi
     config.api_only = true
 
     config.x.frontend_url = ENV.fetch("FRONTEND_URL", "http://localhost:3000")
+    config.active_job.log_arguments = false
   end
 end
