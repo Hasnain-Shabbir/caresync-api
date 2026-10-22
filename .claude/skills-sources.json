@@ -1,0 +1,33 @@
+{
+  "note": "Our own record of vendored third-party skills. Not the format of any CLI lock file. Re-review a skill before updating it.",
+  "skills": {
+    "graphql-schema": {
+      "source": "apollographql/skills",
+      "sourceType": "github",
+      "skillPath": "skills/graphql-schema",
+      "reviewedOn": "2026-10-22",
+      "upstreamSkillMdSha256": "d9b1ec9092dca72b604c718191a19654a1694939c28e4a8261868c7e45c9f4a3",
+      "localFileSha256": {
+        "SKILL.md": "dc4cb96c4e424ac2a06cee1f1196346c29b863913a70c8718fe94691aff615fc",
+        "references/errors.md": "cc1d14124a9e0e2bcd6d5a840d3ee3513e15344964709e6732f47db467e1b551",
+        "references/naming.md": "0dc9e8ab4dfed452a115e41fb40c7de823ba8c4f5ac1e71f699d8d10e7840aa1",
+        "references/pagination.md": "53e53410bb6160124a015f2604049c8f15b265982a86858ff695bfb0beea287d",
+        "references/security.md": "3890ef827968d131a9cf8b87458b8d38ffe60b459371e5e520fa4c444f91faef",
+        "references/types.md": "1d972ec841fb1ff4137c07643b1c0e54c9358ad1e0e98f22ba47567cb7ea61ef"
+      },
+      "localPatches": "frontmatter only: removed allowed-tools (Bash(npm:*), Bash(npx:*)), shortened description and mentioned graphql-ruby, added paths app/graphql/**. Body and references unchanged."
+    },
+    "postgresql-table-design": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/database-design/skills/postgresql-table-design",
+      "reviewedOn": "2026-10-22",
+      "upstreamSkillMdSha256": "1e27b0fac6d88a710cd925b831608ca202c40ade4f4e285a8e027dcf2f9a44ea",
+      "localFileSha256": {
+        "SKILL.md": "f75cdfdb07f3e25af44e318ce00f85d0d9f9067049807459768ea755e7934898",
+        "references/details.md": "fac8b43c75ed30d95f2ab12886021f26bb8b03f8fed0cea2929b8de18953023a"
+      },
+      "localPatches": "frontmatter only: added paths db/** and app/models/**. Body and references unchanged."
+    }
+  }
+}

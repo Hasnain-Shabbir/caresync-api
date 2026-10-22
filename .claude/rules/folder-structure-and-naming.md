@@ -1,0 +1,40 @@
+---
+paths:
+  - "app/**"
+  - "db/**"
+  - "test/**"
+---
+
+# Folder structure and naming
+
+Put code in the folder that owns it. Use the same domain name in every layer (for example `patients` in the type, mutation, service, query object, policy, and job).
+
+```
+app/
+  graphql/
+    caresync_api_schema.rb      limits, introspection, error mapping
+    concerns/                   authentication, helpers shared by operations
+    types/                      one file per type (base_*.rb are generated bases)
+    mutations/                  one file per mutation (BaseMutation is Relay classic)
+    resolvers/                  query resolvers when a query outgrows query_type.rb
+  services/<domain>/            use cases that return a Result      (target, not created yet)
+  queries/<domain>/             query objects: filter, search, paginate   (target)
+  policies/                     one policy per resource, default deny
+  models/                       data rules only (concerns/ small and rare)
+  jobs/<domain>/                thin jobs, arguments are ids
+  mailers/
+db/migrate/                     one change per migration
+test/                           mirrors app/ (see testing.md)
+learning/                       local guides, gitignored, not part of the app
+```
+
+## Naming
+- GraphQL operations: `<Verb><Noun>` in PascalCase (`CreatePatient`, `UpdateOrganization`). The name is part of the contract with any client.
+- Services: `Domain::VerbNoun` (`Patients::Create`), one public method `call`.
+- Jobs: `Domain::VerbNounJob`. Policies: `<Model>Policy`. Query objects: `Domain::<Thing>Query`.
+- File and class names mirror each other (Zeitwerk). Test paths mirror `app/` paths.
+
+## Do not
+- Create `app/helpers`, `app/lib`, or catch-all `Utils` or `Helpers` modules. Name things for what they do.
+- Put a service in `models/` or a model concern in `services/`.
+- Add a top-level folder without a reason written in `learning/` or a decision note.
