@@ -15,7 +15,7 @@ app/
     caresync_api_schema.rb      limits, introspection, error mapping
     concerns/                   authentication, helpers shared by operations
     types/                      one file per type (base_*.rb are generated bases)
-    mutations/                  one file per mutation (BaseMutation is Relay classic)
+    mutations/<domain>/         one file per mutation, in a domain folder: patients/, organizations/, auth/ (BaseMutation is Relay classic)
     resolvers/                  query resolvers when a query outgrows query_type.rb
   services/<domain>/            use cases that return a Result      (target, not created yet)
   queries/<domain>/             query objects: filter, search, paginate   (target)
