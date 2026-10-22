@@ -14,3 +14,10 @@
 #       methods: [:get, :post, :put, :patch, :delete, :options, :head]
 #   end
 # end
+
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    origins Rails.configuration.x.frontend_url
+    resource "/graphql", headers: %w[Authorization Content-Type], methods: %i[post options], max_age: 600
+  end
+end
