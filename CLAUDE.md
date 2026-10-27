@@ -6,7 +6,7 @@ Detailed project rules live in `.claude/rules/*.md` and load automatically. Rule
 
 ## Where things are
 - GraphQL: `POST /graphql`, code in `app/graphql/`. Policies in `app/policies/`. Tests in `test/`.
-- Learning guides, project state, and the plan: `learning/` (gitignored). Start with `learning/HANDOFF.md` and `learning/README.md`.
+- Learning guides, project state, and the plan: `learning/` (committed). Start with `learning/HANDOFF.md` and `learning/README.md`.
 - Standards and rules rationale: `learning/saas-backend-standards-and-claude-setup.md`.
 
 ## Skills (`.claude/skills/`)

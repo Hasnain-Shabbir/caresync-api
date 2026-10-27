@@ -26,7 +26,7 @@ app/
   lib/                          shared, reusable classes that are not tied to one domain (Paginator)
 db/migrate/                     one change per migration
 test/                           mirrors app/ (see testing.md)
-learning/                       local guides, gitignored, not part of the app
+learning/                       learning guides, committed, not part of the app
 ```
 
 ## Naming
