@@ -22,11 +22,14 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :patients, [ Types::PatientType ], null: false, complexity: Types::BaseField::LIST_COMPLEXITY
+    paginated_field :patients, Types::PatientPageType do
+      argument :order_by, Types::PatientOrderEnum, required: true, default_value: { last_name: :asc, first_name: :asc }
+    end
 
-    def patients
+    def patients(page:, per_page:, order_by:)
       authorize!(Patient, :index?)
-      current_organization.patients.order(:last_name, :first_name)
+      scope = current_organization.patients.order(order_by).order(:id)
+      Paginator.call(scope, page: page, per_page: per_page)
     end
 
     def patient(id:)

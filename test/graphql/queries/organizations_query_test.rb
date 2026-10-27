@@ -30,14 +30,29 @@ class OrganizationsQueryTest < ActiveSupport::TestCase
     assert_equal "NOT_FOUND", error.dig("extensions", "code")
   end
 
-  test "organization exposes its patients" do
+  test "organization exposes its patient count, not a patient list" do
     org = organizations(:sunrise)
-    result = execute("query($id: ID!) { organization(id: $id) { patients { firstName lastName dateOfBirth } } }",
-                     variables: { id: org.id.to_s })
+    result = execute("query($id: ID!) { organization(id: $id) { patientsCount } }", variables: { id: org.id.to_s })
 
-    patients = result.dig("data", "organization", "patients")
-    assert_equal %w[Alice Bob], patients.map { |p| p["firstName"] }.sort
-    assert_equal "1990-04-12", patients.find { |p| p["firstName"] == "Alice" }["dateOfBirth"]
+    assert_nil result["errors"]
+    assert_equal 2, result.dig("data", "organization", "patientsCount")
+  end
+
+  test "organization exposes one page of its patients" do
+    result = execute("{ organizations { patients(perPage: 1) { totalCount totalPages hasNextPage patients { firstName dateOfBirth } } } }")
+
+    page = result.dig("data", "organizations", 0, "patients")
+    assert_nil result["errors"]
+    assert_equal 2, page["totalCount"]
+    assert_equal 2, page["totalPages"]
+    assert page["hasNextPage"]
+    assert_equal [ "Alice" ], page["patients"].map { |p| p["firstName"] }
+  end
+
+  test "organization patients enforce the same page size limit" do
+    result = execute("{ organizations { patients(perPage: 31) { totalCount } } }")
+
+    assert_equal "INVALID_ARGUMENT", result["errors"].first.dig("extensions", "code")
   end
 
   test "asking for a field that does not exist is a validation error" do

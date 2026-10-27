@@ -1,6 +1,11 @@
 require "test_helper"
 
 class NPlusOneTest < ActiveSupport::TestCase
+  QUERY = "{ patients(perPage: 30) { patients { firstName organization { name } } } }".freeze
+
+  # NOTE: loading patients through current_organization.patients already sets each patient's organization from the
+  # loaded one (the inverse association), so there is nothing to batch on this path today. This test cannot fail
+  # yet. It guards the page query against someone later changing the scope or adding a field that loads per row.
   def count_queries
     count = 0
     counter = ->(*, payload) { count += 1 unless payload[:name] == "SCHEMA" || payload[:cached] }
@@ -8,25 +13,19 @@ class NPlusOneTest < ActiveSupport::TestCase
     count
   end
 
-  setup do
-    3.times do |i|
-      Patient.create!(organization: organizations(:sunrise), first_name: "P#{i}", last_name: "L#{i}", date_of_birth: "1990-01-01")
-    end
-  end
-
-  # NOTE: a logged-in user now sees only their own organization, so this query can no longer
-  # fan out across several organizations. It still checks that loading patients stays at one
-  # batched query, but it cannot expose an N+1 across organizations by itself. Add a case here
-  # when the schema has a real list of parents with children (for example an admin-wide view).
-  test "listing organizations with their patients uses a constant number of queries" do
+  def queries_for_one_page
     context = graphql_context
     context[:current_user].organization # load the user and organization before counting, so those SELECTs aren't counted
+    count_queries { CaresyncApiSchema.execute(QUERY, context: context) }
+  end
 
-    queries = count_queries do
-      CaresyncApiSchema.execute("{ organizations { name patients { firstName } } }", context: context)
+  test "a page of patients with their organization uses the same number of queries for 2 patients or 12" do
+    few = queries_for_one_page
+
+    10.times do |i|
+      Patient.create!(organization: organizations(:sunrise), first_name: "P#{i}", last_name: "L#{i}", date_of_birth: "1990-01-01")
     end
 
-    # 1 query for the organizations + 1 batched query for their patients.
-    assert_equal 2, queries
+    assert_equal few, queries_for_one_page
   end
 end

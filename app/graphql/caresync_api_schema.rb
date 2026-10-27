@@ -24,8 +24,8 @@ class CaresyncApiSchema < GraphQL::Schema
   end
 
   # Limit the depth and size of incoming queries:
-  max_depth(8)
-  max_complexity(200)
+  max_depth(8, count_introspection_fields: false)
+  max_complexity(200, count_introspection_fields: false)
   max_query_string_tokens(5000)
   disable_introspection_entry_points if Rails.env.production?
 

@@ -76,7 +76,7 @@ class TenancyTest < ActiveSupport::TestCase
   end
 
   test "the patient list contains only the user's own patients" do
-    names = execute("{ patients { firstName } }").dig("data", "patients").map { |p| p["firstName"] }
+    names = execute("{ patients { patients { firstName } } }").dig("data", "patients", "patients").map { |p| p["firstName"] }
 
     assert_equal %w[Alice Bob], names.sort
     assert_not_includes names, "Carol"
@@ -91,10 +91,18 @@ class TenancyTest < ActiveSupport::TestCase
   end
 
   test "nested patients under an organization only list that organization's patients" do
-    result = execute("{ organizations { name patients { firstName } } }")
+    result = execute("{ organizations { name patients { patients { firstName } } } }")
 
-    patients = result.dig("data", "organizations").flat_map { |o| o["patients"] }.map { |p| p["firstName"] }
-    assert_equal %w[Alice Bob], patients.sort
+    names = result.dig("data", "organizations").flat_map { |o| o.dig("patients", "patients") }.map { |p| p["firstName"] }
+    assert_equal %w[Alice Bob], names.sort
+  end
+
+  test "the patient count only counts the user's own organization's patients" do
+    sunrise = execute("{ organizations { patientsCount } }").dig("data", "organizations", 0, "patientsCount")
+    valley = execute("{ organizations { patientsCount } }", as: users(:admin_valley)).dig("data", "organizations", 0, "patientsCount")
+
+    assert_equal 2, sunrise
+    assert_equal 1, valley
   end
 
   # Patients: writing
@@ -146,7 +154,7 @@ class TenancyTest < ActiveSupport::TestCase
 
   test "the valley user sees only valley data" do
     org_names = execute("{ organizations { name } }", as: users(:admin_valley)).dig("data", "organizations").map { |o| o["name"] }
-    patient_names = execute("{ patients { firstName } }", as: users(:admin_valley)).dig("data", "patients").map { |p| p["firstName"] }
+    patient_names = execute("{ patients { patients { firstName } } }", as: users(:admin_valley)).dig("data", "patients", "patients").map { |p| p["firstName"] }
 
     assert_equal [ "Valley Health" ], org_names
     assert_equal [ "Carol" ], patient_names
