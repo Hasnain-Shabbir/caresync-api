@@ -23,6 +23,7 @@ app/
   models/                       data rules only (concerns/ small and rare)
   jobs/<domain>/                thin jobs, arguments are ids
   mailers/
+  lib/                          shared, reusable classes that are not tied to one domain (Paginator)
 db/migrate/                     one change per migration
 test/                           mirrors app/ (see testing.md)
 learning/                       local guides, gitignored, not part of the app
@@ -35,6 +36,6 @@ learning/                       local guides, gitignored, not part of the app
 - File and class names mirror each other (Zeitwerk). Test paths mirror `app/` paths.
 
 ## Do not
-- Create `app/helpers`, `app/lib`, or catch-all `Utils` or `Helpers` modules. Name things for what they do.
+- Create `app/helpers` (view helpers, unused in this API) or catch-all `Utils` or `Helpers` modules. `app/lib` is allowed for shared, reusable classes, but each one is named for what it does (`Paginator`), not `Utils`.
 - Put a service in `models/` or a model concern in `services/`.
 - Add a top-level folder without a reason written in `learning/` or a decision note.
